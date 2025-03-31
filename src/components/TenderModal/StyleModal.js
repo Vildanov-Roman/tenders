@@ -57,16 +57,16 @@ export const ModalContent = styled.div`
   border-radius: 8px;
   width: 800px;
   max-width: 90%;
-  max-height: 90vh; // Ограничиваем высоту
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden; // Скрываем внутренний скролл
+  overflow: hidden;
 `;
 
 export const ScrollableContent = styled.div`
   overflow-y: auto;
-  padding-right: 8px; // Чтобы контент не "прыгал" при появлении скролла
-  margin-bottom: 20px; // Отступ для кнопок
+  padding-right: 8px;
+  margin-bottom: 20px;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -109,7 +109,7 @@ export const ButtonGroup = styled.div`
   gap: 10px;
 `;
 
-export const ButtonLink = styled.a`  // Изменено с button на a
+export const ButtonLink = styled.a`
   display: inline-block;
   padding: 5px;
   font-size: 12px;

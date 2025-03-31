@@ -1,7 +1,6 @@
-// src/components/NomenclaturesList.js
+
 import React from 'react';
 import { NomenclaturesList } from '../components/TenderModal/StyleModal'
-
 
 const Nomenclatures = ({ items }) => {
     return (

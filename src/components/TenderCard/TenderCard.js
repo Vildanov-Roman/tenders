@@ -4,8 +4,6 @@ import React, { useState } from 'react';
 import TenderModal from '../TenderModal/TenderModal';
 import {Card} from './StyleCard';
 
-
-
     const getOrganizerName = (OrganizerId) => {
 
     if (!OrganizerId) return 'Неизвестный организатор';
@@ -34,7 +32,7 @@ const TenderCard = ({ tender, onDelete }) => {
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden"
-                }}>{tender.Description}</p>
+                }}>{tender.Description} ({tender.Lots.length} Лота(ов))</p>
                 <p>Сумма: {tender.Budget?.AmountTitle} ({tender.Budget?.VatTitle})</p>
                 <p>Дата аукциона: {tender.ImportantDates?.AuctionStart || 'Не указана'}</p>
             </Card>
