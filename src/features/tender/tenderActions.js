@@ -47,6 +47,15 @@ export const fetchTenderData = (tenderId) => async (dispatch, getState) => {
             MinimalStepAmount: data.MinimalStepAmount,
             ParticipationCost: data.ParticipationCost,
             Nomenclatures: data.Nomenclatures?.map(n => ({ Title: n.Title, Count: n.Count })),
+            Lots: data.Lots?.map(lot => ({
+                LotId: lot.LotId,
+                Budget: {
+                    AmountTitle: lot.Budget?.AmountTitle,
+                    VatTitle: lot.Budget?.VatTitle
+                },
+                Nomenclatures: lot.Nomenclatures?.map(n => ({ Title: n.Title, Count: n.Count })) || []
+            })) || [],
+
             Documents: data.Documents?.flatMap(section =>
                 section.Documents?.map(d => ({
                     DocumentType: d.DocumentType,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import TenderParser from './components/TenderParser';
-import TenderList from './components/TenderList';
+import TenderSearch from './components/TenderSearch/TenderSearch';
+import TenderList from './components/TenderList/TenderList';
 import styled from 'styled-components';
 
 const AppContainer = styled.div`
@@ -14,7 +14,7 @@ const App = () => {
 
     return (
         <AppContainer>
-            <TenderParser />
+            <TenderSearch />
             {tenders.length > 0 && <TenderList tenders={tenders} />}
         </AppContainer>
     );
