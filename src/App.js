@@ -7,6 +7,7 @@ import styled from 'styled-components';
 const AppContainer = styled.div`
   padding: 20px;
   font-family: Arial, sans-serif;
+  
 `;
 
 const App = () => {

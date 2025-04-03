@@ -27,12 +27,7 @@ const TenderCard = ({ tender, onDelete }) => {
             <Card onClick={() => setIsModalOpen(true)}>
                 <h3>Тендер №{tender.TenderId}</h3>
                 <strong>{organizerName}</strong>
-                <p style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden"
-                }}>{tender.Description} ({tender.Lots.length} Лота(ов))</p>
+                <p>{tender.Description} ({tender.Lots.length} Лота(ов))</p>
                 <p>Сумма: {tender.Budget?.AmountTitle} ({tender.Budget?.VatTitle})</p>
                 <p>Дата аукциона: {tender.ImportantDates?.AuctionStart || 'Не указана'}</p>
             </Card>
