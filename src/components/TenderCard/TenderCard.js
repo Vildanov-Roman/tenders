@@ -1,23 +1,8 @@
 
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import TenderModal from './TenderModal';
 
-const Card = styled.div`
-  width: 300px;
-  height: 200px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 10px;
-  cursor: pointer;
-  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.5);
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.09);
-  }
-`;
+import TenderModal from '../TenderModal/TenderModal';
+import {Card} from './StyleCard';
 
     const getOrganizerName = (OrganizerId) => {
 
@@ -42,12 +27,7 @@ const TenderCard = ({ tender, onDelete }) => {
             <Card onClick={() => setIsModalOpen(true)}>
                 <h3>Тендер №{tender.TenderId}</h3>
                 <strong>{organizerName}</strong>
-                <p style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden"
-                }}>{tender.Description}</p>
+                <p>{tender.Description} ({tender.Lots.length} Лота(ов))</p>
                 <p>Сумма: {tender.Budget?.AmountTitle} ({tender.Budget?.VatTitle})</p>
                 <p>Дата аукциона: {tender.ImportantDates?.AuctionStart || 'Не указана'}</p>
             </Card>
