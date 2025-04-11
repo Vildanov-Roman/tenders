@@ -27,6 +27,7 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(5px);
 `;
 
 export const Container = styled.div`
@@ -36,6 +37,7 @@ export const Container = styled.div`
   border-bottom: 1px solid black;
   padding: 10px 0;
   gap: 15px;
+  
 `;
 
 export const ContactInfo = styled.div`
@@ -52,7 +54,7 @@ export const ContactInfo = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  background: white;
+  background: rgba(255, 195, 50, 0.6);  
   padding: 20px;
   border-radius: 8px;
   width: 800px;
@@ -113,18 +115,20 @@ export const ButtonLink = styled.a`
   display: inline-block;
   padding: 5px;
   font-size: 12px;
+  box-shadow: 0 0 40px 40px #DAA520 inset, 0 0 0 0 #DAA520;
   color: #000;
-  background-color: lightblue;
+  transition: .15s ease-in-out;
   text-decoration: none;
   border-radius: 5px;
-  border: 0.5px solid transparent;
-  transition: background-color 0.3s ease;
+  border: 0.5px solid transparent;  
   cursor: pointer;
   text-align: center;
 
   &:hover {
-    background-color: #0056b3;
-    color: #fff;
+    box-shadow: 0 0 10px 0 #DAA520 inset, 0 0 10px 4px #DAA520;
+    color: #DAA520;
+    background: #282c34;
+    border: 0.5px solid #DAA520;
   }
 `;
 

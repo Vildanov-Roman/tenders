@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import TenderSearch from './components/TenderSearch/TenderSearch';
 import TenderList from './components/TenderList/TenderList';
 import styled from 'styled-components';
+import {ToastContainer} from "react-toastify";
 
 const AppContainer = styled.div`
   padding: 20px;
@@ -11,12 +11,12 @@ const AppContainer = styled.div`
 `;
 
 const App = () => {
-    const tenders = useSelector(state => state.tender.tenders);
 
     return (
         <AppContainer>
             <TenderSearch />
-            {tenders.length > 0 && <TenderList tenders={tenders} />}
+            <TenderList />
+            <ToastContainer position="top-right" autoClose={2000} />
         </AppContainer>
     );
 };

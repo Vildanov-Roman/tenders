@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import dayjs from "dayjs";
 import { useDispatch } from 'react-redux';
-import { removeTender } from '../../features/tender/tenderSlice';
+import { deleteTenderById } from '../../features/tender/tenderActions';
 import {
     ColumnsWrapper,
     LeftColumn,
@@ -19,6 +19,8 @@ import {
     ButtonGroup
 } from './StyleModal'
 import Nomenclatures from "../../Blocks/Nomenclatures/Nomenclatures";
+import {ConfirmModal} from "../../Blocks/ConfirmModal";
+import {toast} from "react-toastify";
 const formatDate = (dateString) => {
     return dayjs(dateString).format("DD/MM/YY в HH:mm");
 };
@@ -29,9 +31,13 @@ const TenderModal = ({ tender, isOpen, onClose }) => {
     const [comment, setComment] = useState(tender.Comment || "");
     const [isEditing, setIsEditing] = useState(false);
     const [hasComment, setHasComment] = useState(!!tender.Comment);
+    const [showConfirm, setShowConfirm] = useState(false);
+
     const handleDelete = () => {
-        dispatch(removeTender(tender.TenderId));
-        onClose();
+        dispatch(deleteTenderById(tender.TenderId)).then(() => {
+            toast.success('Тендер удалён');
+            onClose();
+        });
     };
     const handleCommentChange = (e) => {
         setComment(e.target.value);
@@ -71,6 +77,7 @@ const TenderModal = ({ tender, isOpen, onClose }) => {
     };
 
     return (
+        <>
         <ModalOverlay
             $isOpen={isOpen}
             onClick={onClose}
@@ -192,13 +199,20 @@ const TenderModal = ({ tender, isOpen, onClose }) => {
                 </ScrollableContent>
 
                 <ButtonGroup>
-                    <Button className="danger" onClick={handleDelete}>
+                    <Button className="danger" onClick={() => setShowConfirm(true)}>
                         Удалить
                     </Button>
                     <Button onClick={onClose}>ОК</Button>
                 </ButtonGroup>
             </ModalContent>
         </ModalOverlay>
+
+            <ConfirmModal
+                isOpen={showConfirm}
+                onConfirm={handleDelete}
+                onCancel={() => setShowConfirm(false)}
+            />
+        </>
     );
 };
 

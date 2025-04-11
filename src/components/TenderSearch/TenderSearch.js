@@ -12,7 +12,8 @@ const TenderSearch = () => {
     const dispatch = useDispatch();
     const { status } = useSelector(state => state.tender);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // ← чтобы форма не перезагружала страницу
         if (!inputId.trim()) {
             setModalMessage('Введите ID тендера');
             setIsModalOpen(true);
@@ -22,7 +23,7 @@ const TenderSearch = () => {
         const actionResult = await dispatch(fetchTenderData(inputId));
 
         if (fetchTenderData.fulfilled.match(actionResult)) {
-            // Обработка успешного получения данных о тендере
+            // можно показать всплывашку, мол "Успешно!"
         } else if (fetchTenderData.rejected.match(actionResult)) {
             setModalMessage(actionResult.payload || 'Ошибка при загрузке данных о тендере');
             setIsModalOpen(true);

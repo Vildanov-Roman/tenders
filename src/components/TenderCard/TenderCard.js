@@ -4,27 +4,36 @@ import React, { useState } from 'react';
 import TenderModal from '../TenderModal/TenderModal';
 import {Card} from './StyleCard';
 
-    const getOrganizerName = (OrganizerId) => {
-
-    if (!OrganizerId) return 'Неизвестный организатор';
-
-    switch(OrganizerId) {
-        case 6709:
-            return 'Одесская жд';
-        case 6486:
-            return 'Приднепровская жд';
-        default:
-            return OrganizerId || 'Неизвестный организатор';
-    }
+const ORGANIZERS = {
+    6709: 'Одесская жд',
+    6486: 'Приднепровская жд',
+    7297: 'Львовская ЖД',
+    18151: 'Донецкая ЖД',
+    6642: 'Юго-Западная ЖД',
+    35478: 'Южная ЖД',
+    6557: 'Львовский ЛРЗ',
+    7835: 'КЕВРЗ',
+    10033: 'ЗЕРЗ',
+    5853: 'Киев Метро',
+    32756: 'Харьков Метро',
+    60208: 'Днепро Метро'
 };
 
+const getOrganizerName = (OrganizerId) => {
+    const id = Number(OrganizerId);
+    return ORGANIZERS[id] || 'Какой-то организатор';
+};
+
+
 const TenderCard = ({ tender, onDelete }) => {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const organizerName = getOrganizerName(tender.OrganizerId);
+    const organizerName = getOrganizerName(tender.Organizer?.Id);
 
     return (
         <>
             <Card onClick={() => setIsModalOpen(true)}>
+
                 <h3>Тендер №{tender.TenderId}</h3>
                 <strong>{organizerName}</strong>
                 <p>{tender.Description} ({tender.Lots.length} Лота(ов))</p>

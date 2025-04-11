@@ -1,34 +1,25 @@
+// tenderSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-
-const loadFromLocalStorage = () => {
-    return JSON.parse(localStorage.getItem('tenders')) || [];
-};
 
 const tenderSlice = createSlice({
     name: 'tender',
     initialState: {
-        tenders: loadFromLocalStorage(),
+        tenders: [],
         status: 'idle',
         error: null
     },
     reducers: {
+        setTenders: (state, action) => {
+            state.tenders = action.payload;  // Сохраняем все тендеры в state
+        },
         addTender: (state, action) => {
-            const exists = state.tenders.some(t => t.TenderId === action.payload.TenderId);
+            const exists = state.tenders.some(tender => tender.TenderId === action.payload.TenderId);
             if (!exists) {
                 state.tenders.push(action.payload);
-                localStorage.setItem('tenders', JSON.stringify(state.tenders));
             }
         },
         removeTender: (state, action) => {
-            state.tenders = state.tenders.filter(t => t.TenderId !== action.payload);
-            localStorage.setItem('tenders', JSON.stringify(state.tenders));
-        },
-        updateTender: (state, action) => {
-            const index = state.tenders.findIndex(t => t.TenderId === action.payload.TenderId);
-            if (index !== -1) {
-                state.tenders[index] = action.payload;
-                localStorage.setItem('tenders', JSON.stringify(state.tenders));
-            }
+            state.tenders = state.tenders.filter(tender => tender.TenderId !== action.payload);
         },
         setStatus: (state, action) => {
             state.status = action.payload;
@@ -39,5 +30,5 @@ const tenderSlice = createSlice({
     }
 });
 
-export const { addTender, removeTender, updateTender, setStatus, setError } = tenderSlice.actions;
+export const { setTenders, addTender, removeTender, setStatus, setError } = tenderSlice.actions;
 export default tenderSlice.reducer;
