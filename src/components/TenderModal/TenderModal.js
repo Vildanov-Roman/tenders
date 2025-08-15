@@ -18,6 +18,7 @@ import {
 } from './StyleModal'
 import { Button } from '../TenderSearch/StyleSearch'
 import Nomenclatures from "../../Blocks/Nomenclatures/Nomenclatures";
+import DocsModal from '../DocsModal/DocsModal';
 import dayjs from "dayjs";
 
 const formatDate = (dateString) => {
@@ -29,6 +30,7 @@ const TenderModal = ({ tender, isOpen, onClose, onDelete, isArchiveView }) => {
     const [comment, setComment] = useState(tender.Comment || "");
     const [isEditing, setIsEditing] = useState(false);
     const [hasComment, setHasComment] = useState(!!tender.Comment);
+    const [isDocsOpen, setIsDocsOpen] = useState(false);
 
     const handleDelete = () => {
         if (isArchiveView) {
@@ -72,16 +74,9 @@ const TenderModal = ({ tender, isOpen, onClose, onDelete, isArchiveView }) => {
         }
     };
 
-    const tenderDocumentation = tender.Documents?.find(
-        d => d.Title === "Тендерна документація"
-    )?.Documents?.[0];
-
-    const handleDownloadDocs = () => {
-        if (tenderDocumentation?.Id) {
-         const url = `http://localhost:5000/api/tenders/${tender.TenderId}/documents/${tenderDocumentation.Id}/download`;
-         window.location.href = url; // браузер начнёт скачивание
-        }
-    };
+    const anyDocs =
+        Array.isArray(tender?.Documents) &&
+        tender.Documents.some(s => Array.isArray(s.Documents) && s.Documents.length);
 
     return (
         <>
@@ -93,9 +88,9 @@ const TenderModal = ({ tender, isOpen, onClose, onDelete, isArchiveView }) => {
                     <Container>
                         <b>Тендер №{tender.TenderId}</b>
                         <ButtonLink
-                            onClick={handleDownloadDocs}
-                            style={{ marginLeft: 'auto', opacity: tenderDocumentation?.Id ? 1 : 0.5, cursor: tenderDocumentation?.Id ? 'pointer' : 'not-allowed' }}
-                            disabled={!tenderDocumentation?.Id}
+                            onClick={() => setIsDocsOpen(true)}
+                            style={{ marginLeft: 'auto', opacity: anyDocs ? 1 : 0.5, cursor: anyDocs ? 'pointer' : 'not-allowed' }}
+                            disabled={!anyDocs}
                         >
                             📄 Тендерна документація
                         </ButtonLink>
@@ -214,6 +209,13 @@ const TenderModal = ({ tender, isOpen, onClose, onDelete, isArchiveView }) => {
                     </ButtonGroup>
                 </ModalContent>
             </ModalOverlay>
+
+            <DocsModal
+                isOpen={isDocsOpen}
+                onClose={() => setIsDocsOpen(false)}
+                tenderId={tender.TenderId}
+                tender={tender}
+            />
         </>
     );
 };

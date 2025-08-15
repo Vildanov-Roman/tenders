@@ -22,7 +22,7 @@ const HistoryList = ({ onClose }) => {
             {status === 'loading' ? (
                 <p>Загрузка...</p>
             ) : archivedTenders.length === 0 ? (
-                <p>Архив пуст</p>
+                <p style={{ textAlign: 'center', color: '#DAA520', fontSize: '36px'}}>Архив пуст</p>
             ) : (
                 <GridContainer>
                     {archivedTenders.map(tender => (

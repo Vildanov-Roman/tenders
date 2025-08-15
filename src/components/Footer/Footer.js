@@ -14,13 +14,13 @@ const Footer = () => {
             </CompanyName>
 
             <SocialLinks>
-                <Icon href="#" target="_blank" rel="noopener noreferrer">
+                <Icon href="https://t.me/smarttender_official" target="_blank" rel="noopener noreferrer" alt="Smarttender Telegram">
                     <FaTelegramPlane />
                 </Icon>
-                <Icon href="#" target="_blank" rel="noopener noreferrer">
+                <Icon href="https://www.facebook.com/smarttenders/" target="_blank" rel="noopener noreferrer" alt="Smarttender Facebook">
                     <FaFacebookF />
                 </Icon>
-                <Icon href="#" target="_blank" rel="noopener noreferrer">
+                <Icon href="https://www.instagram.com/smarttender.biz?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" alt="Smarttender Instagram">
                     <FaInstagram />
                 </Icon>
             </SocialLinks>

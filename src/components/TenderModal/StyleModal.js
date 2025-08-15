@@ -26,7 +26,7 @@ export const ModalOverlay = styled.div`
   display: ${props => props.$isOpen ? 'flex' : 'none'};
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1;
   backdrop-filter: blur(5px);
 `;
 

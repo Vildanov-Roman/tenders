@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TenderCard from '../TenderCard/TenderCard';
-import { GridContainer, SearchContainer, SearchInput } from './StyleList';
-import { Button } from '../TenderSearch/StyleSearch';
+import { GridContainer, SearchContainer, SearchInput, Button } from './StyleList';
 import { fetchAllTenders, fetchArchivedTenders } from '../../features/tender/tenderActions';
 import NiHia from "../../img/NiHia.png";
 import HistoryList from '../History/HistoryList';
@@ -12,7 +11,7 @@ const TenderList = () => {
     const { tenders, status } = useSelector((state) => state.tender);
     const { archivedTenders } = useSelector((state) => state.archivedTender);
     const [searchTerm, setSearchTerm] = useState("");
-    const [showArchive, setShowArchive] = useState(false); // Состояние для отображения архива
+    const [showArchive, setShowArchive] = useState(false);
 
     useEffect(() => {
         dispatch(fetchAllTenders());
@@ -27,6 +26,9 @@ const TenderList = () => {
         tender.TenderId.toString().includes(searchTerm) ||
         tender.Organizer?.Name?.toLowerCase().includes(searchTerm)
     );
+
+    const isSearchActive = searchTerm.trim().length > 0;
+    const isNothingFound = isSearchActive && filteredTenders.length === 0;
 
     return (
         <>
@@ -46,22 +48,32 @@ const TenderList = () => {
 
                     {status === 'loading' ? (
                         <p>Загрузка...</p>
-                    ) : filteredTenders.length === 0 ? (
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                            <p style={{
-                                fontSize: "24px",
-                                fontWeight: "bold",
-                                color: "#DAA520",
-                                marginBottom: "20px",
-                            }}>Нет тендеров</p>
-                            <img src={NiHia} alt="no enything" />
-                        </div>
                     ) : (
-                        <GridContainer>
-                            {filteredTenders.map(tender => (
-                                <TenderCard key={tender.TenderId} tender={tender} />
-                            ))}
-                        </GridContainer>
+                        <>
+                            {/* Если база пуста (тендеров нет вообще) — ничего не показываем */}
+                            {tenders.length === 0 ? null : (
+                                <>
+                                    {/* Если есть поиск и ничего не найдено — показываем блок "Нет тендеров" */}
+                                    {isNothingFound ? (
+                                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                                            <p style={{
+                                                fontSize: "24px",
+                                                fontWeight: "bold",
+                                                color: "#DAA520",
+                                                marginBottom: "20px",
+                                            }}>Нет тендеров</p>
+                                            <img src={NiHia} alt="no enything" />
+                                        </div>
+                                    ) : (
+                                        <GridContainer>
+                                            {filteredTenders.map(tender => (
+                                                <TenderCard key={tender.TenderId} tender={tender} />
+                                            ))}
+                                        </GridContainer>
+                                    )}
+                                </>
+                            )}
+                        </>
                     )}
 
                     {archivedTenders.length > 0 && (
