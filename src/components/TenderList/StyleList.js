@@ -7,6 +7,7 @@ export const GridContainer = styled.div`
     `;
 
 export const SearchContainer = styled.div`
+  align-items: center;
   color: #DAA520;
   max-width: 600px;
   margin: 20px auto;
@@ -44,5 +45,26 @@ export const Button = styled.button`
     color: #DAA520;
     background: #282c34;
   }
+`;
+
+export const ImgWrap = styled.div`
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 800px; 
+  margin: 0 auto;
+`
+
+export const Title = styled.p`
+  color: #DAA520;
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 50px;
+  margin-bottom: 10px;
+`;
+
+export const WrapTitle = styled.div`
+  display: flex;
+  justify-content: space-around;
 `;
 

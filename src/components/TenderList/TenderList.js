@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TenderCard from '../TenderCard/TenderCard';
-import { GridContainer, SearchContainer, SearchInput, Button } from './StyleList';
+import {GridContainer, SearchContainer, SearchInput, Button, Title, WrapTitle, ImgWrap} from './StyleList';
 import { fetchAllTenders, fetchArchivedTenders } from '../../features/tender/tenderActions';
 import NiHia from "../../img/NiHia.png";
 import HistoryList from '../History/HistoryList';
@@ -55,15 +55,14 @@ const TenderList = () => {
                                 <>
                                     {/* Если есть поиск и ничего не найдено — показываем блок "Нет тендеров" */}
                                     {isNothingFound ? (
-                                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                                            <p style={{
-                                                fontSize: "24px",
-                                                fontWeight: "bold",
-                                                color: "#DAA520",
-                                                marginBottom: "20px",
-                                            }}>Нет тендеров</p>
+                                        <ImgWrap>
+                                            <WrapTitle>
+                                                <Title>Нет</Title>
+                                                <Title>такого</Title>
+                                                <Title>тендера</Title>
+                                            </WrapTitle>
                                             <img src={NiHia} alt="no enything" />
-                                        </div>
+                                        </ImgWrap>
                                     ) : (
                                         <GridContainer>
                                             {filteredTenders.map(tender => (
