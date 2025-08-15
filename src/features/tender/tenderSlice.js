@@ -10,7 +10,7 @@ const tenderSlice = createSlice({
     },
     reducers: {
         setTenders: (state, action) => {
-            state.tenders = action.payload;  // Сохраняем все тендеры в state
+            state.tenders = action.payload;
         },
         addTender: (state, action) => {
             const exists = state.tenders.some(tender => tender.TenderId === action.payload.TenderId);

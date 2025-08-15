@@ -57,7 +57,7 @@ export const ModalContent = styled.div`
   background: rgba(255, 195, 50, 0.6);  
   padding: 20px;
   border-radius: 8px;
-  width: 800px;
+  width: 850px;
   max-width: 90%;
   max-height: 90vh;
   display: flex;
@@ -138,6 +138,7 @@ export const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  
 
   &.danger {
     background: #ff4d4f;

@@ -1,6 +1,17 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import {addTender, removeTender, setStatus, setError, setTenders} from './tenderSlice';
+import {
+    addTender,
+    removeTender,
+    setError,
+    setTenders,
+} from './tenderSlice';
+import {
+    setArchivedTenders,
+    addArchivedTender,
+    removeArchivedTender
+} from './archivedTenderSlice';
 
+// Получение тендера по ID
 export const fetchTenderData = createAsyncThunk(
     'tender/fetchTenderData',
     async (tenderId, { dispatch, rejectWithValue }) => {
@@ -9,14 +20,12 @@ export const fetchTenderData = createAsyncThunk(
         }
 
         try {
-            dispatch(setStatus('loading'));
-
             const dbResponse = await fetch('http://localhost:5000/api/tenders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ tenderId }) // Только ID!
+                body: JSON.stringify({ tenderId })
             });
 
             if (dbResponse.status === 409) {
@@ -33,17 +42,15 @@ export const fetchTenderData = createAsyncThunk(
         } catch (error) {
             dispatch(setError(error.message));
             return rejectWithValue(error.message);
-        } finally {
-            dispatch(setStatus('idle'));
         }
     }
 );
 
+// Получение всех тендеров
 export const fetchAllTenders = createAsyncThunk(
     'tender/fetchAllTenders',
     async (_, { dispatch, rejectWithValue }) => {
         try {
-            dispatch(setStatus('loading'));
             const response = await fetch('http://localhost:5000/api/tenders');
 
             if (!response.ok) {
@@ -51,22 +58,20 @@ export const fetchAllTenders = createAsyncThunk(
             }
 
             const tenders = await response.json();
-            dispatch(setTenders(tenders)); // сохраняем в Redux
+            dispatch(setTenders(tenders));
             return tenders;
         } catch (error) {
             dispatch(setError(error.message));
             return rejectWithValue(error.message);
-        } finally {
-            dispatch(setStatus('idle'));
         }
     }
 );
 
+// Удаление тендера (удаляется из базы данных)
 export const deleteTenderById = createAsyncThunk(
     'tender/deleteTenderById',
     async (id, { dispatch, rejectWithValue }) => {
         try {
-            dispatch(setStatus('loading'));
             const response = await fetch(`http://localhost:5000/api/tenders/${id}`, {
                 method: 'DELETE'
             });
@@ -75,14 +80,69 @@ export const deleteTenderById = createAsyncThunk(
                 throw new Error('Не удалось удалить тендер');
             }
 
-            const data = await response.json();
-            dispatch(removeTender(id));  // Удаляем тендер из состояния Redux
-            return data;
+            // Удаляем тендер из Redux
+            dispatch(removeTender(id));
+            return id;
         } catch (error) {
             dispatch(setError(error.message));
             return rejectWithValue(error.message);
-        } finally {
-            dispatch(setStatus('idle'));
+        }
+    }
+);
+
+// Архивирование тендера (перенос в "историю")
+export const archiveTenderById = createAsyncThunk(
+    'tender/archiveTenderById',
+    async (tenderId, { dispatch, rejectWithValue }) => {
+        try {
+            // Архивирование тендера на сервере
+            const response = await fetch(`http://localhost:5000/api/tenders/archive/${tenderId}`, {
+                method: 'PATCH'
+            });
+
+            if (!response.ok) throw new Error('Ошибка при архивировании тендера');
+
+            const updatedTender = await response.json();
+
+            // Перемещаем тендер в архив в Redux
+            dispatch(addArchivedTender(updatedTender));  // Добавляем в архив
+            dispatch(removeTender(tenderId));  // Убираем из активного списка
+
+            return updatedTender;
+        } catch (error) {
+            dispatch(setError(error.message));
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const fetchArchivedTenders = createAsyncThunk(
+    'archived/fetchArchivedTenders',
+    async (_, { dispatch, rejectWithValue }) => {
+        try {
+            const res = await fetch('http://localhost:5000/api/tenders/archive');
+            if (!res.ok) throw new Error('Ошибка при получении архива');
+            const data = await res.json();
+            dispatch(setArchivedTenders(data));
+            return data;
+        } catch (e) {
+            return rejectWithValue(e.message);
+        }
+    }
+);
+
+export const deleteArchivedTenderById = createAsyncThunk(
+    'archived/deleteArchivedTenderById',
+    async (tenderId, { dispatch, rejectWithValue }) => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/tenders/archive/${tenderId}`, {
+                method: 'DELETE'
+            });
+            if (!res.ok) throw new Error('Не удалось удалить тендер из архива');
+            dispatch(removeArchivedTender(tenderId));
+            return tenderId;
+        } catch (e) {
+            return rejectWithValue(e.message);
         }
     }
 );

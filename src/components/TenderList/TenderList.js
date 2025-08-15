@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllTenders, deleteTenderById } from '../../features/tender/tenderActions';
 import TenderCard from '../TenderCard/TenderCard';
 import { GridContainer, SearchContainer, SearchInput } from './StyleList';
 import { Button } from '../TenderSearch/StyleSearch';
+import { fetchAllTenders, fetchArchivedTenders } from '../../features/tender/tenderActions';
+import NiHia from "../../img/NiHia.png";
+import HistoryList from '../History/HistoryList';
 
 const TenderList = () => {
     const dispatch = useDispatch();
     const { tenders, status } = useSelector((state) => state.tender);
+    const { archivedTenders } = useSelector((state) => state.archivedTender);
     const [searchTerm, setSearchTerm] = useState("");
+    const [showArchive, setShowArchive] = useState(false); // Состояние для отображения архива
 
-    // Загружаем все тендеры при монтировании компонента
     useEffect(() => {
         dispatch(fetchAllTenders());
+        dispatch(fetchArchivedTenders());
     }, [dispatch]);
-
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value.toLowerCase());
-    };
-
-    const handleDelete = (id) => {
-        dispatch(deleteTenderById(id));
     };
 
     const filteredTenders = tenders.filter(tender =>
@@ -31,31 +30,48 @@ const TenderList = () => {
 
     return (
         <>
-            {tenders.length > 3 && (
-                <SearchContainer>
-                    <SearchInput
-                        type="text"
-                        placeholder="Поиск по ID или Организатору"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                    />
-                    <Button type="button">Найти</Button>
-                </SearchContainer>
-            )}
-            {status === 'loading' ? (
-                <p>Загрузка...</p>
-            ) : filteredTenders.length === 0 ? (
-                <p>Нет тендеров</p>
+            {!showArchive ? (
+                <>
+                    {tenders.length > 3 && (
+                        <SearchContainer>
+                            <SearchInput
+                                type="text"
+                                placeholder="Поиск по ID или Организатору"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                            />
+                            <Button type="button">Найти</Button>
+                        </SearchContainer>
+                    )}
+
+                    {status === 'loading' ? (
+                        <p>Загрузка...</p>
+                    ) : filteredTenders.length === 0 ? (
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                            <p style={{
+                                fontSize: "24px",
+                                fontWeight: "bold",
+                                color: "#DAA520",
+                                marginBottom: "20px",
+                            }}>Нет тендеров</p>
+                            <img src={NiHia} alt="no enything" />
+                        </div>
+                    ) : (
+                        <GridContainer>
+                            {filteredTenders.map(tender => (
+                                <TenderCard key={tender.TenderId} tender={tender} />
+                            ))}
+                        </GridContainer>
+                    )}
+
+                    {archivedTenders.length > 0 && (
+                        <Button onClick={() => setShowArchive(true)}>
+                            Архив
+                        </Button>
+                    )}
+                </>
             ) : (
-                <GridContainer>
-                    {filteredTenders.map(tender => (
-                        <TenderCard
-                            key={tender.TenderId}
-                            tender={tender}
-                            onDelete={() => handleDelete(tender.TenderId)}
-                        />
-                    ))}
-                </GridContainer>
+                <HistoryList onClose={() => setShowArchive(false)} />
             )}
         </>
     );
