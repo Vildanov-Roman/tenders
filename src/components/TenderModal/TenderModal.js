@@ -45,7 +45,7 @@ const TenderModal = ({ tender, isOpen, onClose, onDelete, isArchiveView }) => {
     const handleArchive = () => {
         dispatch(archiveTenderById(tender.TenderId)).then(() => {
             toast.success('Тендер перенесён в архив');
-            onClose(); // Закрываем модальное окно
+            onClose();
         });
     };
 

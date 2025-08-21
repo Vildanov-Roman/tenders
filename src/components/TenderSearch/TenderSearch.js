@@ -14,7 +14,7 @@ const TenderSearch = () => {
     const { status } = useSelector(state => state.tender);
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // предотвращаем перезагрузку страницы
+        e.preventDefault();
         if (!inputId.trim()) {
             setModalMessage('Введите ID тендера');
             setIsModalOpen(true);
@@ -23,7 +23,16 @@ const TenderSearch = () => {
 
         const actionResult = await dispatch(fetchTenderData(inputId));
 
-        if (fetchTenderData.rejected.match(actionResult)) {
+        if (fetchTenderData.fulfilled.match(actionResult)) {
+            const data = actionResult.payload;
+
+            if (!data || Object.keys(data).length === 0) {
+                setModalMessage('Тендер с таким ID не найден');
+                setIsModalOpen(true);
+                return;
+            }
+        }
+        else if (fetchTenderData.rejected.match(actionResult)) {
             setModalMessage(actionResult.payload || 'Ошибка при загрузке данных о тендере');
             setIsModalOpen(true);
         }
@@ -42,7 +51,6 @@ const TenderSearch = () => {
                 </LoaderOverlay>
             )}
 
-            {/* Делаем форму — Enter теперь работает автоматически */}
             <form onSubmit={handleSubmit}>
                 <FormContainer>
                     <h2>Введите ID тендера</h2>

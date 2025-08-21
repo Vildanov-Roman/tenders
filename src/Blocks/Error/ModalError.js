@@ -5,10 +5,8 @@ import { ErrorOverlay, ErrorContent, Button } from './StyleError';
 import letsGoAgain from "../../img/letsGoAgain.png";
 
 const ModalError = ({ children, onClose }) => {
-    // Рендерим в document.body, вне любых stacking context
     return createPortal(
         <ErrorOverlay
-            // страхуемся от любых перекрытий
             style={{ zIndex: 3, position: 'fixed' }}
             role="dialog"
             aria-modal="true"

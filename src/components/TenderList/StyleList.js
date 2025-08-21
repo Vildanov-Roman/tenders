@@ -13,8 +13,8 @@ export const SearchContainer = styled.div`
   margin: 20px auto;
   padding: 20px;
   box-shadow:
-          0 5px 15px rgba(218, 165, 32, 0.5), /* Темное золото */
-          inset 0 2px 5px rgba(255, 215, 0, 0.6); /* Внутреннее сияние */
+          0 5px 15px rgba(218, 165, 32, 0.5),
+          inset 0 2px 5px rgba(255, 215, 0, 0.6);
   backdrop-filter: blur(10px);
   border-radius: 10px
 `;

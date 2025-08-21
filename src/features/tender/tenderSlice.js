@@ -13,10 +13,10 @@ const tenderSlice = createSlice({
             state.tenders = action.payload;
         },
         addTender: (state, action) => {
-            const exists = state.tenders.some(tender => tender.TenderId === action.payload.TenderId);
-            if (!exists) {
-                state.tenders.push(action.payload);
-            }
+            const t = action.payload;
+            if (!t || !t.TenderId) return; // защита
+            const exists = state.tenders.some(x => String(x.TenderId) === String(t.TenderId));
+            if (!exists) state.tenders.push(t);
         },
         removeTender: (state, action) => {
             state.tenders = state.tenders.filter(tender => tender.TenderId !== action.payload);

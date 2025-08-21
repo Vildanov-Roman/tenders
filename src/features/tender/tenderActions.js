@@ -14,34 +14,54 @@ import {
 // Получение тендера по ID
 export const fetchTenderData = createAsyncThunk(
     'tender/fetchTenderData',
-    async (tenderId, { dispatch, rejectWithValue }) => {
-        if (!tenderId || !/^\d+$/.test(tenderId)) {
+    async (tenderId, { dispatch, getState, rejectWithValue }) => {
+        // 1) базовая валидация
+        const id = String(tenderId || '').trim();
+        if (!/^\d+$/.test(id)) {
             return rejectWithValue('Некорректный ID тендера');
+        }
+        // 2) разумные ограничения по длине (подгоните под свою доменную логику)
+        if (id.length < 6 || id.length > 12) {
+            return rejectWithValue('Некорректный ID тендера');
+        }
+        // 3) уже есть в сторе — не дёргаем backend
+        const { tender } = getState();
+        const existsLocal = tender.tenders.some(t => String(t.TenderId) === id);
+        if (existsLocal) {
+            return rejectWithValue('Такой тендер уже сохранён');
         }
 
         try {
-            const dbResponse = await fetch('http://localhost:5000/api/tenders', {
+            const resp = await fetch('http://localhost:5000/api/tenders', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ tenderId })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tenderId: id })
             });
 
-            if (dbResponse.status === 409) {
-                return rejectWithValue('Такой тендер уже сохранён');
+            // 409 — уже в БД
+            if (resp.status === 409) {
+                const body = await resp.json().catch(() => ({}));
+                return rejectWithValue(body?.error || 'Такой тендер уже сохранён');
             }
 
-            if (!dbResponse.ok) {
-                throw new Error('Ошибка при сохранении тендера в БД');
+            // читаем тело один раз
+            const data = await resp.json().catch(() => ({}));
+
+            // НЕ ок — пробрасываем ошибку сервера (может быть 404 «не найден»)
+            if (!resp.ok) {
+                return rejectWithValue(data?.error || 'Ошибка при сохранении тендера в БД');
             }
 
-            const dbData = await dbResponse.json();
-            dispatch(addTender(dbData));
-            return dbData;
-        } catch (error) {
-            dispatch(setError(error.message));
-            return rejectWithValue(error.message);
+            // Защита от пустых ответов
+            if (!data || typeof data !== 'object' || !data.TenderId) {
+                return rejectWithValue('Тендер с таким ID не найден');
+            }
+
+            // Успех — добавляем
+            dispatch(addTender(data));
+            return data;
+        } catch (e) {
+            return rejectWithValue(e.message || 'Ошибка сети');
         }
     }
 );
