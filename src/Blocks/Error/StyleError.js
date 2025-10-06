@@ -15,6 +15,7 @@ export const ErrorOverlay = styled.div`
 `;
 
 export const ErrorContent = styled.div`
+    color: #DAA520;
     background: #000;
     padding: 20px;
     border-radius: 10px;
